@@ -28,3 +28,18 @@ STEP 6: COMPILE A SIMPLE CONTRACT
 STEP 7: DEPLOY A 「GREETER」 CONTRACT TO YOUR PRIVATE NETWORK
 
 STEP 8: INTERACTING WITH A CONTRACT
+
+
+10/9
+
+geth --rpc --rpcaddr 127.0.0.1 --rpcport 8545 --dev --datadir privchain ???
+
+geth --datadir data1 --port 30301 --networkid 123
+
+geth attach ipc:///Users/CYKUO/GitHub/CMPE295A/go-ethereum-1.5.9/privchain/kuo/data1/geth.ipc
+
+admin.nodeInfo.enode
+
+admin.addPeer(enode_info)
+
+web3.net.peerCount
