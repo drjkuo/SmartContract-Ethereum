@@ -20,7 +20,7 @@ contract Solar {
     event showLength(uint length);
     event test(string s);
 
-    function buy(uint amount) public payable returns (uint bought) {
+    function buy(uint amount) public payable returns (uint bought, address) {
         test("1");
         require(!users[msg.sender].exists);
         uint price = msg.value / amount;
@@ -34,7 +34,7 @@ contract Solar {
             test("buying with no selling");
             buying.push(Proposal({amount:amount, price:price, user:buyer}));
             users[buyer] = User({buying: true, user:buyer, exists:true});
-            return 0;
+            return (0, 0);
         }
         
         test("buying with pending selling");
@@ -56,10 +56,10 @@ contract Solar {
         }
         best.user.transfer(best.price * (best.amount + bought));
         msg.sender.transfer(msg.value - best.price * bought);
-        return bought;
+        return (bought, best.user);
     }
 
-    function sell(uint amount) public payable returns (uint sold) {
+    function sell(uint amount) public payable returns (uint sold, address) {
         require(!users[msg.sender].exists);
         uint price = msg.value / amount;
         PriceCalculated(msg.value, amount, price);
@@ -73,7 +73,7 @@ contract Solar {
             selling.push(Proposal({amount:amount, price:price, user:seller}));
             showLength(selling.length);
             users[seller] = User({buying: false, user:seller, exists:true});
-            return 0;
+            return (0, 0);
         }
         
         test("outside");
@@ -95,7 +95,7 @@ contract Solar {
         }
         best.user.transfer(best.price * best.amount + price * sold);
         msg.sender.transfer(msg.value - price * sold);
-        return sold;
+        return (sold, best.user);
     }
     
     function getQueue(bool b) view public returns (Proposal[] ret) {
