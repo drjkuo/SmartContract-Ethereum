@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.18;
 contract Solar {
 
     struct User {
@@ -45,18 +45,21 @@ contract Solar {
             }
         }
         Proposal storage best = selling[lowest];
-        require(best.price < price);
+        address seller = best.user;
+        uint seller_price = best.price;
+        uint seller_amount = best.amount;
+        require(best.price <= price);
         if (best.amount <= amount) {
             bought = best.amount;
             delete selling[lowest];
-            users[best.user].exists = false;
+            users[seller].exists = false;
         } else {
             bought = amount;
             best.amount -= bought;
         }
-        best.user.transfer(best.price * (best.amount + bought));
-        msg.sender.transfer(msg.value - best.price * bought);
-        return (bought, best.user);
+        seller.transfer(seller_price * (seller_amount + bought));
+        msg.sender.transfer(msg.value - seller_price * bought);
+        return (bought, seller);
     }
 
     function sell(uint amount) public payable returns (uint sold, address) {
@@ -84,18 +87,21 @@ contract Solar {
             }
         }
         Proposal storage best = buying[highest];
-        require(best.price > price);
+        address buyer = best.user;
+        uint buyer_price = best.price;
+        uint buyer_amount = best.amount;
+        require(best.price >= price);
         if (best.amount <= amount) {
             sold = best.amount;
             delete buying[highest];
-            users[best.user].exists = false;
+            users[buyer].exists = false;
         } else {
             sold = amount;
             best.amount -= sold;
         }
-        best.user.transfer(best.price * best.amount + price * sold);
-        msg.sender.transfer(msg.value - price * sold);
-        return (sold, best.user);
+        buyer.transfer(buyer_price * buyer_amount - price * sold);
+        msg.sender.transfer(msg.value + price * sold);
+        return (sold, buyer);
     }
     
     function getQueue(bool b) view public returns (Proposal[] ret) {
