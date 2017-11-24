@@ -1,45 +1,20 @@
-# SmartContract-Ethereum
+Build process
 
-Share drive
-https://drive.google.com/drive/folders/0B3hDkSJXDh30bFpSaTB3S2ZnbVk?usp=sharing
+1. Set up and run a test server
+npm install ethereumjs-testrpc web3 and run ./testrpc
 
+2. Upload a compiled contract to the test server
+Web3 = require('web3');
+web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+code = fs.readFileSync('Solar.sol').toString();
+solc = require('solc');
+compiledCode = solc.compile(code);
+abiDefinition = JSON.parse(compiledCode.contracts[':Solar'].interface);
+SolarContract = web3.eth.contract(abiDefinition);
+byteCode = compiledCode.contracts[':Solar'].bytecode;
+deployedContract = SolarContract.new({data: byteCode, from: web3.eth.accounts[0], gas: 4700000});
+contractInstance = SolarContract.at(deployedContract.address);
 
-
-https://omarmetwally.blog/2017/07/25/how-to-create-a-private-ethereum-network/
-
-
-Objectives:
-1. To create a private Ethereum network
-2. To deploy a simple contract to your private Ethereum network
-3. To interact with a contract on your private Ethereum network
-
-STEP 1: SET UP A VIRTUAL SERVER AND INSTALL ETHEREUM COMMAND-LINE TOOLS
-
-STEP 2: CREATE GENESIS BLOCK
-
-STEP 3: CONNECT TO YOUR EXTERNALLY REACHABLE BOOTNODE
-
-STEP 4: CREATE A NEW ACCOUNT AND CHECK YOUR BALANCE
-
-STEP 5: MINE ON YOUR PRIVATE NETWORK
-
-STEP 6: COMPILE A SIMPLE CONTRACT
-
-STEP 7: DEPLOY A 「GREETER」 CONTRACT TO YOUR PRIVATE NETWORK
-
-STEP 8: INTERACTING WITH A CONTRACT
-
-
-10/9
-
-geth --rpc --rpcaddr 127.0.0.1 --rpcport 8545 --dev --datadir privchain ???
-
-geth --datadir data1 --port 30301 --networkid 123
-
-geth attach ipc:///Users/CYKUO/GitHub/CMPE295A/go-ethereum-1.5.9/privchain/kuo/data1/geth.ipc
-
-admin.nodeInfo.enode
-
-admin.addPeer(enode_info)
-
-web3.net.peerCount
+3. Visit index.html
+Because we need a npm file (web3/lib/solidity/coder.js), we run browserify to add the npm file to our client-side js file.
+Remberber to change the contract address in index.js before running browserify.
