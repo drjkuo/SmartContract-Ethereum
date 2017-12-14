@@ -18,3 +18,14 @@ contractInstance = SolarContract.at(deployedContract.address);
 3. Visit index.html
 Because we need a npm file (web3/lib/solidity/coder.js), we run browserify to add the npm file to our client-side js file.
 Remberber to change the contract address in index.js before running browserify.
+
+
+./testrpc
+solarScript.js -- deployedContract.address -- change index.js address
+browserify index.js -o compiled.js
+
+Reference
+https://medium.com/@mvmurthy/full-stack-hello-world-voting-ethereum-dapp-tutorial-part-1-40d2d0d807c2
+http://hypernephelist.com/2016/06/21/a-simple-smart-contract-ui-web3.html
+https://github.com/tomconte/solarchain-dashboard/blob/master/viz.js
+http://javascript.ruanyifeng.com/tool/browserify.html
